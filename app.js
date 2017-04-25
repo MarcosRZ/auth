@@ -2,12 +2,14 @@ var express = require("express"),
     app = express(),
     bodyParser  = require("body-parser"),
     methodOverride = require("method-override"),
-    mongoose = require('mongoose');
+    mongoose = require('mongoose'),
+    morgan = require('morgan');
 
 app.use(bodyParser.urlencoded({ extended: false }));  
 app.use(bodyParser.json());  
 app.use(bodyParser.urlencoded({extended: true}));  
 app.use(methodOverride());
+app.use(morgan('tiny'))
 
 require('./models/userModel');
 
@@ -15,6 +17,8 @@ var auth = require('./controllers/authController')
 var middleware = require('./middlewares/middleware');
 
 // Routes
+app.use('/bower_components', express.static('client/bower_components'))
+app.use('/', express.static('client/'));
 
 var RootRouter = express.Router();
 var APIRouter = express.Router();
@@ -22,6 +26,7 @@ var APIRouter = express.Router();
 // Rutas de autenticación y login
 RootRouter.post('/auth/signup', auth.emailSignup);  
 RootRouter.post('/auth/login', auth.emailLogin);
+
 
 // Ruta solo accesible si estás autenticado
 RootRouter.get('/private',middleware.ensureAuthenticated, function(req, res) {
@@ -36,6 +41,8 @@ APIRouter.use('/users', userRoutes);
 
 app.use('/api', APIRouter);
 app.use('/', RootRouter);
+
+
 
 mongoose.connect('mongodb://localhost:27017/movements', function(err, res) {  
   if(err) {

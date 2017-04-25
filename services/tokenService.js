@@ -11,7 +11,7 @@ module.exports = {
       email: user.email,
       active: user.active,
       iat: moment().unix(),
-      exp: moment().add(14, "days").unix(),
+      exp: moment().add(config.TOKEN_LIFETIME, "days").unix(),
     };
     return jwt.encode(payload, config.TOKEN_SECRET);
   }
