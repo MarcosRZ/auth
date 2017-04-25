@@ -47,11 +47,25 @@ module.exports = {
      * userController.create()
      */
     create: function (req, res) {
+
+      
+      userModel.count({email: req.body.email}, function (err, count){
+        if (err)
+          return res.status(500).json({
+            message: 'Error creating user.',
+            err: err          
+          })
+
+        if (count > 0)
+          return res.status(409).json({
+              message: 'The given email address is already in use' 
+          });
+
         var user = new userModel({
-			email : req.body.email,
-			passhash : md5(req.body.passhash),
-			active : req.body.active,
-			admin : req.body.admin
+			    email : req.body.email,
+			    passhash : md5(req.body.passhash),
+			    active : req.body.active,
+			    admin : req.body.admin
         });
 
         user.save(function (err, user) {
@@ -63,6 +77,10 @@ module.exports = {
             }
             return res.status(201).json(user);
         });
+
+      });
+
+
     },
 
     /**
@@ -70,6 +88,7 @@ module.exports = {
      */
     update: function (req, res) {
         var id = req.params.id;
+
         userModel.findOne({_id: id}, function (err, user) {
             if (err) {
                 return res.status(500).json({
@@ -84,9 +103,9 @@ module.exports = {
             }
 
             user.email = req.body.email ? req.body.email : user.email;
-			user.passhash = req.body.passhash ? md5(req.body.passhash) : user.passhash;
-			user.active = req.body.active ? req.body.active : user.active;
-			user.admin = req.body.admin ? req.body.admin : user.admin;
+		        user.passhash = req.body.passhash ? md5(req.body.passhash) : user.passhash;
+		        user.active = req.body.active ? req.body.active : user.active;
+		        user.admin = req.body.admin ? req.body.admin : user.admin;
 			
             user.save(function (err, user) {
                 if (err) {
