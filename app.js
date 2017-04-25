@@ -10,18 +10,7 @@ app.use(methodOverride());
 
 var router = express.Router();
 
-router.get('/', function(req, res) {  
-  res.send('Hello World!')
-});
-
-router.get('/movement/create', function(req, res) {  
- res.sendFile('./views/movement/Create.html');
-});
-
-router.get('*', function(req, res) {  
-  console.log("pollas")
-   res.send("No match!! :(");
-});
+var userRoutes = require('./routes/userRoutes');
 
 var MovementCtrl = require('./controllers/movements');
 
@@ -32,14 +21,15 @@ movements.route('/movements')
   .get(MovementCtrl.findAllMovements)
   .post(MovementCtrl.addMovement);
 
-movements.route('/movements/:id')  
+movements.route('/movements:id')  
   .get(MovementCtrl.findById)
   .put(MovementCtrl.updateMovement)
   .delete(MovementCtrl.deleteMovement);
 
-app.use('/api', movements);  
+router.use(movements);  
+router.use('/user',userRoutes);
 
-app.use(router);
+app.use('/api', router);
 
 mongoose.connect('mongodb://localhost:27017/movements', function(err, res) {  
   if(err) {
