@@ -1,5 +1,5 @@
 var userModel = require('../models/userModel.js');
-
+var md5 = require('md5')
 /**
  * userController.js
  *
@@ -47,7 +47,11 @@ module.exports = {
      * userController.create()
      */
     create: function (req, res) {
-        var user = new userModel({			email : req.body.email,			passhash : req.body.passhash,			active : req.body.active,			admin : req.body.admin
+        var user = new userModel({
+			email : req.body.email,
+			passhash : md5(req.body.passhash),
+			active : req.body.active,
+			admin : req.body.admin
         });
 
         user.save(function (err, user) {
@@ -79,7 +83,11 @@ module.exports = {
                 });
             }
 
-            user.email = req.body.email ? req.body.email : user.email;			user.passhash = req.body.passhash ? req.body.passhash : user.passhash;			user.active = req.body.active ? req.body.active : user.active;			user.admin = req.body.admin ? req.body.admin : user.admin;			
+            user.email = req.body.email ? req.body.email : user.email;
+			user.passhash = req.body.passhash ? md5(req.body.passhash) : user.passhash;
+			user.active = req.body.active ? req.body.active : user.active;
+			user.admin = req.body.admin ? req.body.admin : user.admin;
+			
             user.save(function (err, user) {
                 if (err) {
                     return res.status(500).json({
