@@ -21,8 +21,7 @@ var app = angular.module("myApp", ["satellizer", "ui.router"])
                 url: "/login",
                 templateUrl: "views/login.html",
                 controller: "LoginController",
-                controllerAs: "login",
-                allowedRoles: ['admin']
+                controllerAs: "login"
             })
             .state("signup", {
                 url: "/signup",
@@ -39,7 +38,8 @@ var app = angular.module("myApp", ["satellizer", "ui.router"])
                 url: "/private",
                 templateUrl: "views/private.html",
                 controller: "PrivateController",
-                controllerAs: "private"
+                controllerAs: "private",
+                allowedRoles: ['admin']
             });
 
           // Configuracion del interceptor que añade la cabecera Authorization
@@ -66,7 +66,11 @@ var app = angular.module("myApp", ["satellizer", "ui.router"])
 
         $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
                                                       , fromState, fromParams) {
-            console.log(toState);
+            console.log(toState)
+            if (!authService.checkAuthAndRole(toState)){
+              e.preventDefault();
+              $state.go("login")
+            }
         });
     });
 /*

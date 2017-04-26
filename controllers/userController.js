@@ -48,6 +48,7 @@ module.exports = {
      */
     create: function (req, res) {
 
+    console.log(req.body)
       
       userModel.count({email: req.body.email}, function (err, count){
         if (err)
