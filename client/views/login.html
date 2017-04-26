@@ -1,6 +1,24 @@
-<!-- views/login.html -->  
-<form ng-submit="login.login()" method="post">  
-    <input type="email" ng-model="login.email"/>
-    <input type="password" ng-model="login.password"/>
-    <button type="submit">Autenticarse</button>
+<!-- views/login.html -->
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+<h1>Login</h1>
+<form ng-submit="login.login()" class="for" method="post">  
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" class="form-control" type="email" ng-model="login.email"/>
+    </div>
+    <div class="form-group">
+        <label for="email">Password</label>
+        <input class="form-control" type="password" ng-model="login.password"/>
+    </div>
+    <div ng-if="login.error" class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+        <span class="sr-only">Error: </span>{{login.error}}
+    </div>
+    <div class="text-center">
+        <button class="btn btn-md btn-info" type="submit">Sign in</button>
+    </div>
+
 </form> 
+</div>
+</div>

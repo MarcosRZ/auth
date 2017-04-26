@@ -8,10 +8,36 @@ angular
 
 function SignUpController($auth, $location) {  
     var vm = this;
+    
+    vm.email = "";
+    vm.passhash = "";
+    vm.repeat = "";
+    vm.error = "";
+    
     this.signup = function() {
+
+        if (vm.email === ""){
+            vm.error = "Email is empty"
+            return;
+        }
+
+        if (vm.passhash.length < 6){
+            vm.error = "Password must be at least 6 chars long";
+            return;
+        }
+
+        if (!(vm.passhash === vm.repeat)){
+            vm.error = "Passwords does not match";
+            return;
+        }
+
+            console.log(this.passhash + " == " + this.repeat)
+
         $auth.signup({
             email: vm.email,
-            password: vm.password
+            passhash: vm.passhash,
+            active: true,
+            admin: false
         })
         .then(function() {
             // Si se ha registrado correctamente,
@@ -26,6 +52,9 @@ function SignUpController($auth, $location) {
 
 function LoginController($auth, $location) {  
     var vm = this;
+
+    vm.error = "";
+
     this.login = function(){
         $auth.login({
             email: vm.email,
@@ -38,6 +67,9 @@ function LoginController($auth, $location) {
         })
         .catch(function(response){
             // Si ha habido errores llegamos a esta parte
+            vm.error = response.data.message;
+            console.log(vm.error)
+            return;
         });
     }
 }

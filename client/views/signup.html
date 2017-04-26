@@ -1,6 +1,25 @@
-<!-- views/signup.html -->  
-<form ng-submit="signup.signup()" method="post">  
-    <input type="email" ng-model="signup.email"/>
-    <input type="password" ng-model="signup.password"/>
-    <button type="submit">Registrarse</button>
-</form>  
+<!-- views/signup.html -->
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">  
+    <form ng-submit="signup.signup()" method="post">
+        <div class="form-group">
+            <label for="email">Email</label>  
+            <input class="form-control" name="email" id="email" type="email" ng-model="signup.email"/>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input class="form-control" name="passhash" id="passhash" type="password" ng-model="signup.passhash"/>
+        </div>
+        <div class="form-group">
+            <label for="repeat">Repeat</label>
+            <input class="form-control" name="repeat" id="repeat" type="password" ng-model="signup.repeat"/>
+        </div>
+    <div ng-if="signup.error" class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+        <span class="sr-only">Error: </span>{{signup.error}}
+    </div>
+        <button class="btn btn-md btn-success" type="submit">Registrarse</button>
+    </form>  
+</div>
+</div>

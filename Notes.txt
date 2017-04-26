@@ -1,0 +1,31 @@
+SERVICIO DE AUTENTIFICACIÓN
+
+Hace falta un servicio de angular que me dé en cada momento información sobre el usuario activo.
+La idea básica sería sacar el token de LocalStorage, decodificarlo y devolver un objeto identidad.
+
+Este servicio es necesario a la hora de restringir el acceso a vistas en funcion del rol.
+
+También será util a la hora de mostrar un menú superior. En funcion de si el usuario esta identificado,
+y en caso afirmativo, de sus datos, se puede mostrar una pequeña vista de login / logout.
+
+Un buen punto de partida es client/services/authService.js.
+
+    - isLoggedIn() : Comprueba si el usuario está autentificado.
+
+        Una implementacion de este método podría comprobar en primer lugar si existe el token.
+        En caso afirmativo, si el token es válido (puede haber caducado, ser incorrecto)
+
+    - hasRole(role) : Comprueba si el usuario implementa el rol pasado como parametro.
+
+        Lo normal es que una vista requiera N roles y un usuario implemente N roles.
+        Una implementación básica del sistema pasa por asumir que una vista requiere 1 rol,
+        y un usuario es admin o no. Con esto se cubriría gran parte de la casuística ya que
+        la mayoría de las aplicaciones solo implementan una parte pública, una a nivel de usuario,
+        y una privada a nivel de administrador.
+
+FRAMEWORK / TEMPLATE
+
+Antes de meterme con la implementación de las vistas funcionales, estaría bien dejar in repo con un punto
+general de implementación. De manera que las cuestiones relativas a los usuarios y autentificación estén
+resueltas ya que son transversales a muchos proyectos. Idealmente, para una implementación concreta se
+partiría de un fork de este proyecto.
