@@ -1,28 +1,9 @@
-var app = angular.module("myApp", [])
+// var app = angular.module("myApp", [])
 
+var app = angular.module("myApp", ["satellizer", "ui.router"])
+    .config(function($authProvider, $stateProvider, $httpProvider) {
 
- 
-app.config(['$httpProvider', 'satellizer.config', function($httpProvider, config) {
-      $httpProvider.interceptors.push(['$q', function($q) {
-        var tokenName = config.tokenPrefix ? config.tokenPrefix + '_' + config.tokenName : config.tokenName;
-        return {
-          request: function(httpConfig) {
-            var token = localStorage.getItem(tokenName);
-            if (token && config.httpInterceptor) {
-              token = config.authHeader === 'Authorization' ? 'Bearer ' + token : token;
-              httpConfig.headers[config.authHeader] = token;
-            }
-            return httpConfig;
-          },
-          responseError: function(response) {
-            return $q.reject(response);
-          }
-        };
-      }]);
-    }])
-
-angular.module("myApp", ["satellizer", "ui.router"])
-    .config(function($authProvider, $stateProvider) {
+      console.log($authProvider)
         // Parametros de configuración
         $authProvider.loginUrl = "http://localhost:3000/auth/login";
         $authProvider.signupUrl = "http://localhost:300/auth/signup";
@@ -40,7 +21,8 @@ angular.module("myApp", ["satellizer", "ui.router"])
                 url: "/login",
                 templateUrl: "views/login.html",
                 controller: "LoginController",
-                controllerAs: "login"
+                controllerAs: "login",
+                allowedRoles: ['admin']
             })
             .state("signup", {
                 url: "/signup",
@@ -60,9 +42,53 @@ angular.module("myApp", ["satellizer", "ui.router"])
                 controllerAs: "private"
             });
 
-
+          // Configuracion del interceptor que añade la cabecera Authorization
+          $httpProvider.interceptors.push(['$q', function($q) {
+            var tokenName = $authProvider.SatellizerConfig.tokenPrefix ? $authProvider.SatellizerConfig.tokenPrefix + '_' + $authProvider.SatellizerConfig.tokenName : $authProvider.SatellizerConfig.tokenName;
+            return {
+              request: function(httpConfig) {
+                var token = localStorage.getItem(tokenName);
+                if (token && $authProvider.SatellizerConfig.httpInterceptor) {
+                  token = $authProvider.SatellizerConfig.authHeader === 'Authorization' ? 'Bearer ' + token : token;
+                  httpConfig.headers[$authProvider.SatellizerConfig.authHeader] = token;
+                }
+                return httpConfig;
+              },
+              responseError: function(response) {
+                return $q.reject(response);
+              }
+            };
+          }]);
       
     })
+    .run(function($rootScope, $location, $state, authService) {
+
+
+        $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
+                                                      , fromState, fromParams) {
+            console.log(toState);
+        });
+    });
+/*
+    app.config(['$httpProvider', 'satellizer.config', function($httpProvider, config) {
+      $httpProvider.interceptors.push(['$q', function($q) {
+        var tokenName = config.tokenPrefix ? config.tokenPrefix + '_' + config.tokenName : config.tokenName;
+        return {
+          request: function(httpConfig) {
+            var token = localStorage.getItem(tokenName);
+            if (token && config.httpInterceptor) {
+              token = config.authHeader === 'Authorization' ? 'Bearer ' + token : token;
+              httpConfig.headers[config.authHeader] = token;
+            }
+            return httpConfig;
+          },
+          responseError: function(response) {
+            return $q.reject(response);
+          }
+        };
+      }]);
+    }])
+    */
 /*
 angular.module('myApp', [])   
     .config(['$httpProvider', 'satellizer.config', function($httpProvider, config) {
