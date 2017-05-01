@@ -1,12 +1,12 @@
 angular  
     .module("myApp")
-    .controller("SignUpController", SignUpController)
+    .controller("SignUpController", ["authService",SignUpController])
     .controller("LoginController", LoginController)
     .controller("LogoutController", LogoutController)
     .controller("PrivateController", PrivateController)
     .controller("HomeController", HomeController); 
 
-function SignUpController($auth, $location) {  
+function SignUpController($auth, $location, authService) {  
     var vm = this;
     
     vm.email = "";
@@ -42,6 +42,8 @@ function SignUpController($auth, $location) {
         .then(function() {
             // Si se ha registrado correctamente,
             // Podemos redirigirle a otra parte
+
+            
             $location.path("/private");
         })
         .catch(function(response) {
@@ -50,7 +52,7 @@ function SignUpController($auth, $location) {
     }
 }
 
-function LoginController($auth, $location) {  
+function LoginController($scope, $auth, $location, authService) {  
     var vm = this;
 
     vm.error = "";
@@ -63,22 +65,29 @@ function LoginController($auth, $location) {
         .then(function(){
             // Si se ha logueado correctamente, lo tratamos aquí.
             // Podemos también redirigirle a una ruta
+
+            // Emitir evento login
+            authService.setIdentity()
             $location.path("/private")
         })
         .catch(function(response){
             // Si ha habido errores llegamos a esta parte
             vm.error = response.data.message;
-            console.log(vm.error)
+            console.log("ERROR:", vm.error)
             return;
         });
     }
 }
 
-function LogoutController($auth, $location) {  
+function LogoutController($scope, $auth, $location, authService) {  
     $auth.logout()
         .then(function() {
             // Desconectamos al usuario y lo redirijimos
-            $location.path("/")
+
+            // Emitir evento logout
+            
+            authService.setIdentity()
+            $location.path("/login")
         });
 }
 

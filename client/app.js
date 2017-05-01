@@ -1,6 +1,5 @@
 // var app = angular.module("myApp", [])
-
-var app = angular.module("myApp", ["satellizer", "ui.router"])
+angular.module("myApp", ["satellizer", "ui.router", "angular-jwt"])
     .config(function($authProvider, $stateProvider, $httpProvider) {
 
       
@@ -48,6 +47,11 @@ var app = angular.module("myApp", ["satellizer", "ui.router"])
                 controllerAs: "private",
                 allowedRoles: ['admin']
             })
+            .state("user", {
+              url: '/user',
+              templateUrl: "views/user.html",
+              allowedRoles: ["user"]
+            })
             .state("404", {
               url: "*path",
               templateUrl: "views/404.html"
@@ -59,6 +63,7 @@ var app = angular.module("myApp", ["satellizer", "ui.router"])
             return {
               request: function(httpConfig) {
                 var token = localStorage.getItem(tokenName);
+                
                 if (token && $authProvider.SatellizerConfig.httpInterceptor) {
                   token = $authProvider.SatellizerConfig.authHeader === 'Authorization' ? 'Bearer ' + token : token;
                   httpConfig.headers[$authProvider.SatellizerConfig.authHeader] = token;
@@ -75,8 +80,6 @@ var app = angular.module("myApp", ["satellizer", "ui.router"])
     .run(function($rootScope, $location, $state, authService) {
         $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
                                                       , fromState, fromParams) {
-            console.log(toState)
-
             if (!toState.allowedRoles || toState.allowedRoles.length == 0)
               return;
 
@@ -86,44 +89,3 @@ var app = angular.module("myApp", ["satellizer", "ui.router"])
             }
         });
     });
-/*
-    app.config(['$httpProvider', 'satellizer.config', function($httpProvider, config) {
-      $httpProvider.interceptors.push(['$q', function($q) {
-        var tokenName = config.tokenPrefix ? config.tokenPrefix + '_' + config.tokenName : config.tokenName;
-        return {
-          request: function(httpConfig) {
-            var token = localStorage.getItem(tokenName);
-            if (token && config.httpInterceptor) {
-              token = config.authHeader === 'Authorization' ? 'Bearer ' + token : token;
-              httpConfig.headers[config.authHeader] = token;
-            }
-            return httpConfig;
-          },
-          responseError: function(response) {
-            return $q.reject(response);
-          }
-        };
-      }]);
-    }])
-    */
-/*
-angular.module('myApp', [])   
-    .config(['$httpProvider', 'satellizer.config', function($httpProvider, config) {
-      $httpProvider.interceptors.push(['$q', function($q) {
-        var tokenName = config.tokenPrefix ? config.tokenPrefix + '_' + config.tokenName : config.tokenName;
-        return {
-          request: function(httpConfig) {
-            var token = localStorage.getItem(tokenName);
-            if (token && config.httpInterceptor) {
-              token = config.authHeader === 'Authorization' ? 'Bearer ' + token : token;
-              httpConfig.headers[config.authHeader] = token;
-            }
-            return httpConfig;
-          },
-          responseError: function(response) {
-            return $q.reject(response);
-          }
-        };
-      }]);
-    }]);
-*/

@@ -2,3 +2,11 @@ body {
     background-color: #333;
     color: #CCC;
 }
+
+.margin-top{
+    margin-top:50px;
+}
+
+.glyphicon.space{
+    margin-right:10px;
+}

@@ -65,8 +65,8 @@ module.exports = {
         var user = new userModel({
 			    email : req.body.email,
 			    passhash : md5(req.body.passhash),
-			    active : req.body.active,
-			    admin : req.body.admin
+			    active : true,
+			    admin : false
         });
 
         user.save(function (err, user) {
