@@ -6,8 +6,8 @@ angular.module("myApp", ["satellizer", "ui.router", "angular-jwt"])
 
       console.log($authProvider)
         // Parametros de configuración
-        $authProvider.loginUrl = "http://localhost:3000/auth/login";
-        $authProvider.signupUrl = "http://localhost:3000/auth/signup";
+        $authProvider.loginUrl = "http://192.168.0.23:3000/auth/login";
+        $authProvider.signupUrl = "http://192.168.0.23:3000/auth/signup";
         $authProvider.tokenName = "token";
         $authProvider.tokenPrefix = "myApp",
 
