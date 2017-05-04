@@ -3,12 +3,14 @@ var express = require("express"),
     bodyParser  = require("body-parser"),
     methodOverride = require("method-override"),
     mongoose = require('mongoose'),
-    morgan = require('morgan');
+    morgan = require('morgan')
+    cors = require('cors')
 
 app.use(bodyParser.urlencoded({ extended: false }));  
 app.use(bodyParser.json());  
 app.use(bodyParser.urlencoded({extended: true}));  
-app.use(methodOverride());
+app.use(methodOverride())
+app.use(cors());
 app.use(morgan('tiny'))
 
 require('./models/userModel');
